@@ -6,7 +6,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import model.*;
 import dao.*;
-
 import javafx.animation.FadeTransition;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -25,8 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.Optional;
 
-
-public class MainController {
+public class HelloController {
 
     @FXML private TableView<ProductTableItem> productTable;
     @FXML private TableColumn<ProductTableItem, String> colName;
@@ -39,7 +37,10 @@ public class MainController {
     @FXML private TableColumn<ProductTableItem, String> colDiscount;
     @FXML private TableColumn<ProductTableItem, Void> colActions;
 
-    @FXML private ComboBox<String> categoryFilter;
+    @FXML private Button btnAllCategories;
+    @FXML private Button btnClothes;
+    @FXML private Button btnShoes;
+    @FXML private Button btnAccessories;
     @FXML private ComboBox<String> sortOrder;
     @FXML private TextField searchField;
     @FXML private Label lblCapital;
@@ -48,6 +49,9 @@ public class MainController {
     @FXML private Label lblProfit;
     @FXML private Label lblTotalProducts;
     @FXML private Label lblLastUpdate;
+    @FXML private Label lblCurrentCategory;
+
+    private String currentCategory = "All Collections";
 
     private ProductDAO productDAO;
     private AppSettingsDAO appSettingsDAO;
@@ -105,13 +109,13 @@ public class MainController {
                     String style = "";
                     switch (item) {
                         case "Clothes":
-                            style = "-fx-background-color: #e3f2fd; -fx-text-fill: #1976d2; -fx-padding: 5; -fx-background-radius: 5; -fx-font-weight: bold;";
+                            style = "-fx-background-color: #E8DCC8; -fx-text-fill: #5A4A3A; -fx-padding: 6 12; -fx-background-radius: 6; -fx-font-weight: bold; -fx-font-family: 'Georgia';";
                             break;
                         case "Shoes":
-                            style = "-fx-background-color: #f3e5f5; -fx-text-fill: #7b1fa2; -fx-padding: 5; -fx-background-radius: 5; -fx-font-weight: bold;";
+                            style = "-fx-background-color: #DFD4E8; -fx-text-fill: #574A5D; -fx-padding: 6 12; -fx-background-radius: 6; -fx-font-weight: bold; -fx-font-family: 'Georgia';";
                             break;
                         case "Accessories":
-                            style = "-fx-background-color: #fff3e0; -fx-text-fill: #e65100; -fx-padding: 5; -fx-background-radius: 5; -fx-font-weight: bold;";
+                            style = "-fx-background-color: #D4E4D0; -fx-text-fill: #4A5D48; -fx-padding: 6 12; -fx-background-radius: 6; -fx-font-weight: bold; -fx-font-family: 'Georgia';";
                             break;
                     }
                     setStyle(style);
@@ -197,11 +201,11 @@ public class MainController {
                 } else {
                     setText(String.valueOf(stock));
                     if (stock == 0) {
-                        setStyle("-fx-background-color: #ffebee; -fx-text-fill: #c62828; -fx-font-weight: bold;");
+                        setStyle("-fx-background-color: #E8D4D0; -fx-text-fill: #7D4A48; -fx-font-weight: bold; -fx-padding: 6; -fx-background-radius: 6;");
                     } else if (stock < 10) {
-                        setStyle("-fx-background-color: #fff3e0; -fx-text-fill: #e65100; -fx-font-weight: bold;");
+                        setStyle("-fx-background-color: #F5E6D3; -fx-text-fill: #8B6B3A; -fx-font-weight: bold; -fx-padding: 6; -fx-background-radius: 6;");
                     } else {
-                        setStyle("-fx-background-color: #e8f5e9; -fx-text-fill: #2e7d32; -fx-font-weight: bold;");
+                        setStyle("-fx-background-color: #D4E4D0; -fx-text-fill: #4A5D48; -fx-font-weight: bold; -fx-padding: 6; -fx-background-radius: 6;");
                     }
                 }
             }
@@ -218,9 +222,9 @@ public class MainController {
                 } else {
                     setText(item);
                     if (item.contains("%")) {
-                        setStyle("-fx-background-color: #fff59d; -fx-text-fill: #f57f17; -fx-padding: 5; -fx-background-radius: 5; -fx-font-weight: bold;");
+                        setStyle("-fx-background-color: #F5E6D3; -fx-text-fill: #8B6B3A; -fx-padding: 6 12; -fx-background-radius: 6; -fx-font-weight: bold; -fx-font-family: 'Georgia';");
                     } else {
-                        setStyle("-fx-text-fill: #999;");
+                        setStyle("-fx-text-fill: #A0937D; -fx-font-size: 11px;");
                     }
                 }
             }
@@ -230,7 +234,7 @@ public class MainController {
         addActionButtonsToTable();
 
         productTable.setItems(filteredList);
-        productTable.setPlaceholder(new Label("🛍️ No products found. Click 'Add Product' to get started!"));
+        productTable.setPlaceholder(new Label("No products in this collection yet.\nClick '✨ New Product' to add items."));
     }
 
     private void addActionButtonsToTable() {
@@ -278,25 +282,83 @@ public class MainController {
 
     private Button createStyledButton(String text, String color) {
         Button button = new Button(text);
+        String bgColor = "";
+        switch (color) {
+            case "#3498db": // Edit - Beige
+                bgColor = "#C4A57B";
+                break;
+            case "#e74c3c": // Delete - Muted Red
+                bgColor = "#C49B96";
+                break;
+            case "#27ae60": // Buy - Sage Green
+                bgColor = "#9BB896";
+                break;
+            case "#f39c12": // Sell - Golden
+                bgColor = "#D4A574";
+                break;
+            default:
+                bgColor = color;
+        }
         button.setStyle(String.format(
-                "-fx-background-color: %s; -fx-text-fill: white; -fx-font-size: 10px; " +
-                        "-fx-padding: 5 10; -fx-background-radius: 5; -fx-cursor: hand; -fx-font-weight: bold;",
-                color
+                "-fx-background-color: %s; -fx-text-fill: white; -fx-font-size: 11px; " +
+                        "-fx-padding: 6 12; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-weight: bold; -fx-font-family: 'Georgia';",
+                bgColor
         ));
-        button.setOnMouseEntered(e -> button.setStyle(button.getStyle() + "-fx-opacity: 0.8;"));
-        button.setOnMouseExited(e -> button.setStyle(button.getStyle().replace("-fx-opacity: 0.8;", "")));
+        button.setOnMouseEntered(e -> button.setStyle(button.getStyle() + "-fx-opacity: 0.85;"));
+        button.setOnMouseExited(e -> button.setStyle(button.getStyle().replace("-fx-opacity: 0.85;", "")));
         return button;
     }
 
     private void setupFiltersAndSorting() {
-        categoryFilter.getItems().addAll("All Categories", "Clothes", "Shoes", "Accessories");
-        categoryFilter.setValue("All Categories");
-        categoryFilter.setOnAction(e -> filterProducts());
-
         sortOrder.getItems().addAll("Default Order", "Price: Low to High", "Price: High to Low",
                 "Stock: Low to High", "Stock: High to Low", "Name: A-Z", "Name: Z-A");
         sortOrder.setValue("Default Order");
         sortOrder.setOnAction(e -> sortProducts());
+
+        // Set initial active state
+        updateCategoryButtonStyles();
+    }
+
+    @FXML
+    private void handleCategoryAll() {
+        currentCategory = "All Collections";
+        updateCategoryButtonStyles();
+        filterProducts();
+    }
+
+    @FXML
+    private void handleCategoryClothes() {
+        currentCategory = "Clothes";
+        updateCategoryButtonStyles();
+        filterProducts();
+    }
+
+    @FXML
+    private void handleCategoryShoes() {
+        currentCategory = "Shoes";
+        updateCategoryButtonStyles();
+        filterProducts();
+    }
+
+    @FXML
+    private void handleCategoryAccessories() {
+        currentCategory = "Accessories";
+        updateCategoryButtonStyles();
+        filterProducts();
+    }
+
+    private void updateCategoryButtonStyles() {
+        String activeStyle = "-fx-background-color: #D4A574; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 15; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: bold; -fx-pref-width: 230; -fx-font-family: 'Georgia';";
+        String inactiveStyle = "-fx-background-color: #E8DCC8; -fx-text-fill: #5A4A3A; -fx-font-size: 14px; -fx-padding: 15; -fx-background-radius: 8; -fx-cursor: hand; -fx-pref-width: 230; -fx-border-color: #D4A574; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-font-family: 'Georgia';";
+
+        btnAllCategories.setStyle(currentCategory.equals("All Collections") ? activeStyle : inactiveStyle);
+        btnClothes.setStyle(currentCategory.equals("Clothes") ? activeStyle : inactiveStyle);
+        btnShoes.setStyle(currentCategory.equals("Shoes") ? activeStyle : inactiveStyle);
+        btnAccessories.setStyle(currentCategory.equals("Accessories") ? activeStyle : inactiveStyle);
+
+        if (lblCurrentCategory != null) {
+            lblCurrentCategory.setText(currentCategory);
+        }
     }
 
     @FXML
@@ -318,7 +380,7 @@ public class MainController {
         ButtonType applyButtonType = new ButtonType("Apply Discount", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(applyButtonType, ButtonType.CANCEL);
 
-        VBox content = new VBox(15);
+        javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(15);
         content.setPadding(new Insets(20));
 
         Label infoLabel = new Label("Fixed discount rates:");
@@ -371,7 +433,7 @@ public class MainController {
         ButtonType stopButtonType = new ButtonType("Stop Discount", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(stopButtonType, ButtonType.CANCEL);
 
-        VBox content = new VBox(15);
+        javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(15);
         content.setPadding(new Insets(20));
 
         ComboBox<ProductCategory> categoryCombo = new ComboBox<>();
@@ -417,13 +479,12 @@ public class MainController {
     }
 
     private void filterProducts() {
-        String category = categoryFilter.getValue();
         String searchText = searchField != null ? searchField.getText().toLowerCase() : "";
 
         filteredList.clear();
 
         for (ProductTableItem item : productList) {
-            boolean categoryMatch = category.equals("All Categories") || item.getCategory().equals(category);
+            boolean categoryMatch = currentCategory.equals("All Collections") || item.getCategory().equals(currentCategory);
             boolean searchMatch = searchText.isEmpty() ||
                     item.getName().toLowerCase().contains(searchText) ||
                     item.getDetails().toLowerCase().contains(searchText);
@@ -433,7 +494,7 @@ public class MainController {
             }
         }
 
-        lblTotalProducts.setText(String.format("Total: %d products", filteredList.size()));
+        lblTotalProducts.setText(String.format("%d items", filteredList.size()));
         sortProducts();
     }
 

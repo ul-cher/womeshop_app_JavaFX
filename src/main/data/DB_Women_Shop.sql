@@ -3,8 +3,19 @@
 CREATE DATABASE IF NOT EXISTS womenshop;
 USE womenshop;
 
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE transactions;
+TRUNCATE TABLE clothes;
+TRUNCATE TABLE shoes;
+TRUNCATE TABLE accessories;
+TRUNCATE TABLE products;
+TRUNCATE TABLE app_settings;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
 -- Table for application settings and capital tracking
-CREATE TABLE app_settings (
+CREATE TABLE IF NOT EXISTS app_settings (
                               id INT PRIMARY KEY AUTO_INCREMENT,
                               initial_capital DECIMAL(10, 2) NOT NULL,
                               current_capital DECIMAL(10, 2) NOT NULL,
@@ -15,7 +26,7 @@ CREATE TABLE app_settings (
 );
 
 -- Base table for common product attributes
-CREATE TABLE products (
+CREATE TABLE IF NOT EXISTS products (
                           id INT PRIMARY KEY AUTO_INCREMENT,
                           name VARCHAR(100) NOT NULL,
                           category ENUM('CLOTHES', 'SHOES', 'ACCESSORIES') NOT NULL,
@@ -29,7 +40,7 @@ CREATE TABLE products (
 );
 
 -- Specific table for Clothes with additional attributes
-CREATE TABLE clothes (
+CREATE TABLE IF NOT EXISTS clothes (
                          product_id INT PRIMARY KEY,
                          size VARCHAR(10) NOT NULL,
                          color VARCHAR(50) NOT NULL,
@@ -38,7 +49,7 @@ CREATE TABLE clothes (
 );
 
 -- Specific table for Shoes with additional attributes
-CREATE TABLE shoes (
+CREATE TABLE IF NOT EXISTS shoes (
                        product_id INT PRIMARY KEY,
                        shoe_size INT NOT NULL,
                        color VARCHAR(50) NOT NULL,
@@ -47,7 +58,7 @@ CREATE TABLE shoes (
 );
 
 -- Specific table for Accessories with additional attributes
-CREATE TABLE accessories (
+CREATE TABLE IF NOT EXISTS accessories (
                              product_id INT PRIMARY KEY,
                              type VARCHAR(50) NOT NULL, -- e.g., bag, jewelry, scarf
                              color VARCHAR(50),
@@ -56,7 +67,7 @@ CREATE TABLE accessories (
 );
 
 -- Table for transaction history
-CREATE TABLE transactions (
+CREATE TABLE IF NOT EXISTS transactions (
                               id INT PRIMARY KEY AUTO_INCREMENT,
                               product_id INT NOT NULL,
                               transaction_type ENUM('PURCHASE', 'SALE') NOT NULL,

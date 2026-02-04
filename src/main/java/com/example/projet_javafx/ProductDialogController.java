@@ -23,18 +23,21 @@ public class ProductDialogController {
 
     public void showProductDialog(Product existingProduct, Runnable onSuccess) {
         Dialog<Product> dialog = new Dialog<>();
-        dialog.setTitle(existingProduct == null ? "➕ Add New Product" : "✏️ Edit Product");
+        dialog.setTitle(existingProduct == null ? "✨ Add New Product" : "✏️ Edit Product");
         dialog.setHeaderText(existingProduct == null ?
-                "Fill in the details to add a new product to your inventory" :
-                "Modify the product details");
+                "Add a new item to your boutique collection" :
+                "Update product information");
 
-        ButtonType saveButtonType = new ButtonType("💾 Save", ButtonBar.ButtonData.OK_DONE);
+        ButtonType saveButtonType = new ButtonType("💾 Save Product", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+        // Style the dialog
+        dialog.getDialogPane().setStyle("-fx-background-color: #FDFBF7; -fx-font-family: 'Georgia';");
 
         // Create main container
         VBox mainContainer = new VBox(20);
-        mainContainer.setPadding(new Insets(20));
-        mainContainer.setStyle("-fx-background-color: #f8f9fa;");
+        mainContainer.setPadding(new Insets(25));
+        mainContainer.setStyle("-fx-background-color: #FDFBF7;");
 
         // Basic Information Section
         VBox basicSection = createSection("📋 Basic Information");
@@ -131,9 +134,9 @@ public class ProductDialogController {
         // Info box
         HBox infoBox = new HBox(10);
         infoBox.setAlignment(Pos.CENTER_LEFT);
-        infoBox.setStyle("-fx-background-color: #e8f5e9; -fx-padding: 12; -fx-background-radius: 8;");
-        Label infoLabel = new Label("💡 Tip: Make sure selling price is higher than purchase price for profit!");
-        infoLabel.setStyle("-fx-text-fill: #2e7d32; -fx-font-size: 11px;");
+        infoBox.setStyle("-fx-background-color: #D4E4D0; -fx-padding: 15; -fx-background-radius: 8; -fx-border-color: #9BB896; -fx-border-width: 1; -fx-border-radius: 8;");
+        Label infoLabel = new Label("💡 Ensure selling price exceeds cost for profitable margins");
+        infoLabel.setStyle("-fx-text-fill: #4A5D48; -fx-font-size: 12px; -fx-font-family: 'Georgia';");
         infoBox.getChildren().add(infoLabel);
 
         mainContainer.getChildren().addAll(basicSection, categorySection, infoBox);
@@ -310,10 +313,10 @@ public class ProductDialogController {
 
     private VBox createSection(String title) {
         VBox section = new VBox(10);
-        section.setStyle(getSectionStyle("#ffffff"));
+        section.setStyle(getSectionStyle("#FFFFFF"));
 
         Label titleLabel = new Label(title);
-        titleLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #333;");
+        titleLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #5A4A3A; -fx-font-family: 'Georgia';");
         section.getChildren().add(titleLabel);
 
         return section;
@@ -321,8 +324,8 @@ public class ProductDialogController {
 
     private String getSectionStyle(String bgColor) {
         return String.format(
-                "-fx-background-color: %s; -fx-padding: 15; -fx-background-radius: 10; " +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);",
+                "-fx-background-color: %s; -fx-padding: 18; -fx-background-radius: 10; " +
+                        "-fx-border-color: #E8DCC8; -fx-border-width: 1.5; -fx-border-radius: 10;",
                 bgColor
         );
     }
@@ -330,14 +333,14 @@ public class ProductDialogController {
     private TextField createStyledTextField(String prompt) {
         TextField field = new TextField();
         field.setPromptText(prompt);
-        field.setStyle("-fx-pref-width: 250; -fx-padding: 8; -fx-background-radius: 5; " +
-                "-fx-border-color: #ddd; -fx-border-radius: 5;");
+        field.setStyle("-fx-pref-width: 280; -fx-padding: 10; -fx-background-radius: 6; " +
+                "-fx-background-color: #FDFBF7; -fx-border-color: #D4C4B0; -fx-border-radius: 6; -fx-font-family: 'Georgia';");
         return field;
     }
 
     private Label createLabel(String text) {
         Label label = new Label(text);
-        label.setStyle("-fx-font-weight: bold; -fx-text-fill: #555;");
+        label.setStyle("-fx-font-weight: bold; -fx-text-fill: #5A4A3A; -fx-font-family: 'Georgia';");
         return label;
     }
 
