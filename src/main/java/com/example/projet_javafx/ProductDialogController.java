@@ -30,16 +30,10 @@ public class ProductDialogController {
 
         ButtonType saveButtonType = new ButtonType("💾 Save Product", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
-
-        // Style the dialog
         dialog.getDialogPane().setStyle("-fx-background-color: #FDFBF7; -fx-font-family: 'Georgia';");
-
-        // Create main container
         VBox mainContainer = new VBox(20);
         mainContainer.setPadding(new Insets(25));
         mainContainer.setStyle("-fx-background-color: #FDFBF7;");
-
-        // Basic Information Section
         VBox basicSection = createSection("📋 Basic Information");
         GridPane basicGrid = new GridPane();
         basicGrid.setHgap(15);
